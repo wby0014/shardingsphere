@@ -30,8 +30,14 @@ import java.util.Map;
 @Getter
 @Setter
 public class YamlEncryptRuleConfiguration implements YamlConfiguration {
-    
+
+    /**
+     * 加密器配置
+     */
     private Map<String, YamlEncryptorRuleConfiguration> encryptors = new LinkedHashMap<>();
-    
+
+    /**
+     * 需要加密的表规则配置
+     */
     private Map<String, YamlEncryptTableRuleConfiguration> tables = new LinkedHashMap<>();
 }

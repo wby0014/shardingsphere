@@ -30,13 +30,19 @@
     <modules>
         <module>sharding-jdbc-spring-boot-starter</module>
         <module>sharding-jdbc-spring-namespace</module>
+        <module>base-common-encrypt-jdbc-starter</module>
     </modules>
     
     <dependencies>
         <dependency>
             <groupId>org.apache.shardingsphere</groupId>
             <artifactId>sharding-jdbc-core</artifactId>
-            <version>${project.version}</version>
+            <version>4.1.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>5.2.21.RELEASE</version>
         </dependency>
     </dependencies>
 </project>

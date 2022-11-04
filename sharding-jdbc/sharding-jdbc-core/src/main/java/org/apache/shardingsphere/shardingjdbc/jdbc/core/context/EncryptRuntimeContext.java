@@ -27,6 +27,7 @@ import org.apache.shardingsphere.underlying.common.metadata.decorator.SchemaMeta
 
 import javax.sql.DataSource;
 import java.sql.SQLException;
+import java.util.Collection;
 import java.util.Properties;
 
 /**
@@ -41,6 +42,7 @@ public final class EncryptRuntimeContext extends SingleDataSourceRuntimeContext<
     @Override
     protected SchemaMetaData loadSchemaMetaData(final DataSource dataSource) throws SQLException {
         int maxConnectionCount = getProperties().<Integer>getValue(ConfigurationPropertyKey.MAX_CONNECTIONS_SIZE_PER_QUERY);
-        return SchemaMetaDataDecorator.decorate(SchemaMetaDataLoader.load(dataSource, maxConnectionCount, getDatabaseType().getName()), getRule(), new EncryptTableMetaDataDecorator());
+        return SchemaMetaDataDecorator.decorate(SchemaMetaDataLoader.loadConfig(dataSource, maxConnectionCount, getDatabaseType().getName(),getRule().getEncryptTableNames()), getRule(), new EncryptTableMetaDataDecorator());
     }
+
 }

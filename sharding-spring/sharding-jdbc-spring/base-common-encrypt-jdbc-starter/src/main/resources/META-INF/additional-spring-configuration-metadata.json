@@ -1,0 +1,19 @@
+{
+  "hints": [],
+  "groups": [],
+  "properties": [
+    {
+      "name": "encryptjdbc.enabled",
+      "type": "java.lang.Boolean",
+      "description": "是否开启encryptjdbc.",
+      "defaultValue": true
+    },
+    {
+      "name": "encryptjdbc.datasource.proxy.names",
+      "type": "java.lang.String",
+      "sourceType": "com.xiaoying.common.encrypt.jdbc.properties.EncryptProxyDatasourceProperties",
+      "description": "配置需要被代理的数据源bean名称.",
+      "defaultValue": "dataSource"
+    }
+  ]
+}

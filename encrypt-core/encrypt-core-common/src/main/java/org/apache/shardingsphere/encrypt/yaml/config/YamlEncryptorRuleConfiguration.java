@@ -29,7 +29,9 @@ import java.util.Properties;
 @Getter
 @Setter
 public final class YamlEncryptorRuleConfiguration implements YamlConfiguration {
-    
+    /**
+     * 内置AES/MD5/RC4/SM3/SM4
+     */
     private String type;
     
     private Properties props = new Properties();

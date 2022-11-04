@@ -27,11 +27,18 @@ import org.apache.shardingsphere.underlying.common.yaml.config.YamlConfiguration
 @Getter
 @Setter
 public final class YamlEncryptColumnRuleConfiguration implements YamlConfiguration {
-    
+
+    /**
+     * 明文列(必填)
+     */
     private String plainColumn;
-    
+    /**
+     * 密文列(必填)
+     */
     private String cipherColumn;
-    
+    /**
+     * 辅助查询列(可选)
+     */
     private String assistedQueryColumn;
     
     private String encryptor;

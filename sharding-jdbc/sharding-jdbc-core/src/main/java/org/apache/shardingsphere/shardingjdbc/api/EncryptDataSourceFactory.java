@@ -45,4 +45,5 @@ public final class EncryptDataSourceFactory {
     public static DataSource createDataSource(final DataSource dataSource, final EncryptRuleConfiguration encryptRuleConfiguration, final Properties props) throws SQLException {
         return new EncryptDataSource(dataSource, new EncryptRule(encryptRuleConfiguration), props);
     }
+
 }

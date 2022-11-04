@@ -30,6 +30,8 @@ import java.util.Map;
 @Getter
 @Setter
 public final class YamlEncryptTableRuleConfiguration implements YamlConfiguration {
-    
+    /**
+     * 逻辑列集合
+     */
     private Map<String, YamlEncryptColumnRuleConfiguration> columns = new LinkedHashMap<>();
 }

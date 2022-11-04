@@ -43,8 +43,11 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 /**
- * Schema meta data loader.
- */
+* Schema meta data loader.
+* support custom config file load
+* @author binyu.wu
+* @date 2022/11/3 17:20
+*/
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @Slf4j(topic = "ShardingSphere-metadata")
 public final class SchemaMetaDataLoader {
@@ -76,7 +79,47 @@ public final class SchemaMetaDataLoader {
                 ? load(dataSource.getConnection(), tableGroups.get(0), databaseType) : asyncLoad(dataSource, maxConnectionCount, tableNames, tableGroups, databaseType);
         return new SchemaMetaData(tableMetaDataMap);
     }
-    
+
+    /**
+     * 根据配置文件特定加载
+     *
+     * @param dataSource
+     * @param maxConnectionCount
+     * @param databaseType
+     * @param tables
+     * @return
+     * @throws SQLException
+     */
+    public static SchemaMetaData loadConfig(final DataSource dataSource, final int maxConnectionCount, final String databaseType, final Collection<String> tables) throws SQLException {
+        List<String> tableNames;
+        try (Connection connection = dataSource.getConnection()) {
+            tableNames = loadConfigTableNames(connection, databaseType, tables);
+        }
+        log.info("Loading {} tables' meta data.", tableNames.size());
+        if (0 == tableNames.size()) {
+            return new SchemaMetaData(Collections.emptyMap());
+        }
+        List<List<String>> tableGroups = Lists.partition(tableNames, Math.max(tableNames.size() / maxConnectionCount, 1));
+        Map<String, TableMetaData> tableMetaDataMap = 1 == tableGroups.size()
+                ? load(dataSource.getConnection(), tableGroups.get(0), databaseType) : asyncLoad(dataSource, maxConnectionCount, tableNames, tableGroups, databaseType);
+        return new SchemaMetaData(tableMetaDataMap);
+    }
+
+    private static List<String> loadConfigTableNames(final Connection connection, final String databaseType, final Collection<String> tables) throws SQLException {
+        List<String> result = new LinkedList<>();
+        for (String table: tables) {
+            try (ResultSet resultSet = connection.getMetaData().getTables(connection.getCatalog(), JdbcUtil.getSchema(connection, databaseType), table, null)) {
+                if (!resultSet.next()) {
+                    log.error("Table {} is not exists,please check config [spring.encryptjdbc.encrypt.tables]", table);
+                } else {
+                    log.info("Table {} use encrypt jdbc handle.", table);
+                    result.add(table);
+                }
+            }
+        }
+        return result;
+    }
+
     private static Map<String, TableMetaData> load(final Connection connection, final Collection<String> tables, final String databaseType) throws SQLException {
         try (Connection con = connection) {
             Map<String, TableMetaData> result = new LinkedHashMap<>();
@@ -86,7 +129,8 @@ public final class SchemaMetaDataLoader {
             return result;
         }
     }
-    
+
+
     private static List<String> loadAllTableNames(final Connection connection, final String databaseType) throws SQLException {
         List<String> result = new LinkedList<>();
         try (ResultSet resultSet = connection.getMetaData().getTables(connection.getCatalog(), JdbcUtil.getSchema(connection, databaseType), null, new String[]{TABLE_TYPE})) {
