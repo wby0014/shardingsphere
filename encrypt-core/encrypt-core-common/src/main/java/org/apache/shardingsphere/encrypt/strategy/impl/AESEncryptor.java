@@ -21,40 +21,49 @@ import com.google.common.base.Preconditions;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.binary.StringUtils;
-import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.shardingsphere.encrypt.strategy.spi.Encryptor;
+import org.apache.shardingsphere.encrypt.utils.XorUtil;
 
 import javax.crypto.Cipher;
 import javax.crypto.NoSuchPaddingException;
+import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
+import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
 import java.util.Properties;
 
 /**
  * AES encryptor.
+ *
+ * @author binyu.wu
+ * @date 2022/11/7 15:40
  */
 @Getter
 @Setter
+@Slf4j
 public final class AESEncryptor implements Encryptor {
-    
+
     private static final String AES_KEY = "aes.key.value";
-    
+
+    private static final String DEFAULT_ALGORITHM = "AES/GCM/NoPadding";
+    private static final String BASE64_IV = "T3ZdQ3VBJwBEC1BXI1AKPA==";
+
     private Properties properties = new Properties();
-    
+
     @Override
     public String getType() {
         return "AES";
     }
-    
+
     @Override
     public void init() {
     }
-    
+
     @Override
     @SneakyThrows
     public String encrypt(final Object plaintext) {
@@ -64,7 +73,7 @@ public final class AESEncryptor implements Encryptor {
         byte[] result = getCipher(Cipher.ENCRYPT_MODE).doFinal(StringUtils.getBytesUtf8(String.valueOf(plaintext)));
         return Base64.encodeBase64String(result);
     }
-    
+
     @Override
     @SneakyThrows
     public Object decrypt(final String ciphertext) {
@@ -74,16 +83,17 @@ public final class AESEncryptor implements Encryptor {
         byte[] result = getCipher(Cipher.DECRYPT_MODE).doFinal(Base64.decodeBase64(ciphertext));
         return new String(result, StandardCharsets.UTF_8);
     }
-    
-    private Cipher getCipher(final int decryptMode) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException {
-        Preconditions.checkArgument(properties.containsKey(AES_KEY), "No available secret key for `%s`.", AESEncryptor.class.getName());
-        Cipher result = Cipher.getInstance(getType());
-        result.init(decryptMode, new SecretKeySpec(createSecretKey(), getType()));
+
+    private Cipher getCipher(final int decryptMode) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException {
+        GCMParameterSpec gcmParameterSpec = new GCMParameterSpec(128, XorUtil.decrypt(BASE64_IV).getBytes(StandardCharsets.UTF_8));
+        Cipher result = Cipher.getInstance(DEFAULT_ALGORITHM);
+        result.init(decryptMode, new SecretKeySpec(createSecretKey(), getType()), gcmParameterSpec);
         return result;
     }
-    
+
     private byte[] createSecretKey() {
         Preconditions.checkArgument(null != properties.get(AES_KEY), String.format("%s can not be null.", AES_KEY));
-        return Arrays.copyOf(DigestUtils.sha1(properties.get(AES_KEY).toString()), 16);
+        return XorUtil.decrypt(properties.get(AES_KEY).toString()).getBytes(StandardCharsets.UTF_8);
     }
+
 }
