@@ -55,6 +55,17 @@
         <module>shadow-core</module>
         <module>master-slave-core</module>
     </modules>
+
+    <distributionManagement>
+        <repository>
+            <id>Releases</id>
+            <url>http://nexus.quvideo.com/nexus/content/repositories/releases/</url>
+        </repository>
+        <snapshotRepository>
+            <id>Snapshots</id>
+            <url>http://nexus.quvideo.com/nexus/content/repositories/snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
     
     <properties>
         <java.version>1.8</java.version>

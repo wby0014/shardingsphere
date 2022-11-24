@@ -18,6 +18,7 @@
 package org.apache.shardingsphere.shardingjdbc.jdbc.core.context;
 
 import lombok.Getter;
+import lombok.Setter;
 import org.apache.shardingsphere.core.log.ConfigurationLogger;
 import org.apache.shardingsphere.spi.database.type.DatabaseType;
 import org.apache.shardingsphere.sql.parser.SQLParserEngine;
@@ -37,11 +38,12 @@ import java.util.Properties;
  * @param <T> type of rule
  */
 @Getter
+@Setter
 public abstract class AbstractRuntimeContext<T extends BaseRule> implements RuntimeContext<T> {
     
     private final T rule;
     
-    private final ConfigurationProperties properties;
+    private  ConfigurationProperties properties;
     
     private final DatabaseType databaseType;
     

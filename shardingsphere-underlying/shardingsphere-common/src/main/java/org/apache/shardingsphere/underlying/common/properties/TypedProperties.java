@@ -20,6 +20,7 @@ package org.apache.shardingsphere.underlying.common.properties;
 import com.google.common.base.Joiner;
 import lombok.Getter;
 import org.apache.shardingsphere.underlying.common.config.exception.ShardingSphereConfigurationException;
+import org.apache.shardingsphere.underlying.common.config.properties.ConfigurationPropertyKey;
 
 import java.util.Collection;
 import java.util.HashMap;

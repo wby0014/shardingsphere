@@ -2,6 +2,7 @@ package com.xiaoying.common.encrypt.jdbc;
 
 import com.xiaoying.common.encrypt.jdbc.common.EncryptJdbcPropertiesConfigurationProperties;
 import com.xiaoying.common.encrypt.jdbc.condition.EncryptRuleCondition;
+import com.xiaoying.common.encrypt.jdbc.properties.EncryptPropertiesRefresher;
 import com.xiaoying.common.encrypt.jdbc.properties.EncryptProxyDatasourceProperties;
 import com.xiaoying.common.encrypt.jdbc.properties.EncryptRuleConfigurationProperties;
 import com.xiaoying.common.encrypt.jdbc.multidatasource.EncryptDataSourceConfiguration;
@@ -68,6 +69,11 @@ public class EncryptJdbcConfiguration implements EnvironmentAware {
     @Conditional(EncryptRuleCondition.class)
     public EncryptDataSourceConfiguration encryptDataSourceConfiguration() throws SQLException {
         return new EncryptDataSourceConfiguration(encryptRule, props, dataSourceMap);
+    }
+
+    @Bean
+    public EncryptPropertiesRefresher encryptPropertiesRefresher() {
+        return new EncryptPropertiesRefresher();
     }
 
     @Bean
