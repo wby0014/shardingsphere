@@ -71,7 +71,13 @@ public final class AESEncryptor implements Encryptor {
             return null;
         }
         byte[] result = getCipher(Cipher.ENCRYPT_MODE).doFinal(StringUtils.getBytesUtf8(String.valueOf(plaintext)));
-        return Base64.encodeBase64String(result);
+        String encrypt = Base64.encodeBase64String(result);
+        if (null != encrypt && encrypt.length() >= 190) {
+            log.info("encryptjdbc aes encrypt result length more than 190, so choose plaintext");
+            return String.valueOf(plaintext);
+        } else {
+            return encrypt;
+        }
     }
 
     @Override
@@ -80,8 +86,13 @@ public final class AESEncryptor implements Encryptor {
         if (null == ciphertext) {
             return null;
         }
-        byte[] result = getCipher(Cipher.DECRYPT_MODE).doFinal(Base64.decodeBase64(ciphertext));
-        return new String(result, StandardCharsets.UTF_8);
+        try {
+            byte[] result = getCipher(Cipher.DECRYPT_MODE).doFinal(Base64.decodeBase64(ciphertext));
+            return new String(result, StandardCharsets.UTF_8);
+        } catch (Exception e) {
+            log.error("encryptjdbc aes decrypt error, check cipher is plain", e);
+            return ciphertext;
+        }
     }
 
     private Cipher getCipher(final int decryptMode) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException {
