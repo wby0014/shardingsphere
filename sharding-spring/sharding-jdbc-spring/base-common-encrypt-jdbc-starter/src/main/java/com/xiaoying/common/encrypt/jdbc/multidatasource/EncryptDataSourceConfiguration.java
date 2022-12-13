@@ -87,7 +87,7 @@ public class EncryptDataSourceConfiguration implements ApplicationContextAware, 
                 log.error("[encryptjdbc.rules.datasource." + key + ".tables] configuration is not exists,please check");
                 throw new ShardingSphereException("[encryptjdbc.rules.datasource." + key + ".tables] configuration is not exists,please check");
             }
-            return EncryptDataSourceFactory.createDataSource(dataSourceMap.get(key), new EncryptRuleConfigurationYamlSwapper().swap(ruleConfiguration), props.getProps());
+            return EncryptDataSourceFactory.createDataSource(dataSourceMap.get(key), new EncryptRuleConfigurationYamlSwapper().swap(ruleConfiguration), props.getProps().get(key));
         } catch (SQLException e) {
             log.error("Create encrypt jdbc datasource " + key + " error!", e);
             throw new ShardingSphereException("Create encrypt jdbc datasource " + key + " error!");
