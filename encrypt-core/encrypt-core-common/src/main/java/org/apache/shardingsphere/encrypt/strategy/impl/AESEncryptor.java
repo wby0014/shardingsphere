@@ -70,6 +70,10 @@ public final class AESEncryptor implements Encryptor {
         if (null == plaintext) {
             return null;
         }
+        if (String.valueOf(plaintext).length() > 50) {
+            log.info("encryptjdbc aes encrypt plaintext length more than 50, so choose plaintext");
+            return String.valueOf(plaintext);
+        }
         byte[] result = getCipher(Cipher.ENCRYPT_MODE).doFinal(StringUtils.getBytesUtf8(String.valueOf(plaintext)));
         String encrypt = Base64.encodeBase64String(result);
         if (null != encrypt && encrypt.length() >= 190) {

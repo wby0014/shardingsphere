@@ -69,14 +69,15 @@ public class EncryptPropertiesRefresher implements ApplicationContextAware {
             Collection<Object> allKey = entry.getValue().keySet();
             for (Object key : allKey) {
                 if (changeEvent.isChanged("encryptjdbc.props." + entry.getKey() + "." + key)) {
-                    log.info("Encryptjdbc datasource {} props properties {} is change", entry.getKey(), key);
                     ConfigChange configChange = changeEvent.getChange("encryptjdbc.props." + entry.getKey() + "." + key);
                     String newValue = configChange.getNewValue();
+                    log.info("Encryptjdbc datasource {} props properties {} is change,newValue:{}", entry.getKey(), key, newValue);
                     entry.getValue().setProperty(String.valueOf(key), newValue);
                 }
             }
             EncryptDataSource dataSource = EncryptApplicationContext.getBean(EncryptJdbcConstant.DEFAULT_PROXY_DATASOURCE_NAME.equals(entry.getKey()) ? EncryptJdbcConstant.DEFAULT_ENCRYPT_DATASOURCE : "encryptDataSource_" + entry.getKey(), EncryptDataSource.class);
             if (null != dataSource) {
+                log.info("Encryptjdbc datasource {} refresh properties {}", entry.getKey(), entry.getValue());
                 dataSource.refreshRuntimeContext(entry.getValue());
             }
         }
