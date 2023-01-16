@@ -8,6 +8,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
+ * Encrypt jdbc 多数据源隔离配置
  * @author binyu.wu
  * @date 2022/11/3 19:26
  */

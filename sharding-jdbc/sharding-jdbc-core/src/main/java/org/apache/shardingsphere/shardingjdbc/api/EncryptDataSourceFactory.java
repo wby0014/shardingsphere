@@ -32,18 +32,22 @@ import java.util.Properties;
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class EncryptDataSourceFactory {
-    
+
     /**
      * Create encrypt data source.
-     * 
-     * @param dataSource data source
+     *
+     * @param dataSource               data source
      * @param encryptRuleConfiguration encrypt rule configuration
-     * @param props properties
+     * @param props                    properties
      * @return encrypt data source
      * @throws SQLException SQL exception
      */
     public static DataSource createDataSource(final DataSource dataSource, final EncryptRuleConfiguration encryptRuleConfiguration, final Properties props) throws SQLException {
         return new EncryptDataSource(dataSource, new EncryptRule(encryptRuleConfiguration), props);
+    }
+
+    public static DataSource createDataSource(final DataSource dataSource, final String originDataSourceName, final EncryptRuleConfiguration encryptRuleConfiguration, final Properties props) throws SQLException {
+        return new EncryptDataSource(dataSource, originDataSourceName, new EncryptRule(encryptRuleConfiguration), props);
     }
 
 }

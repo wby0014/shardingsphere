@@ -52,6 +52,12 @@ public abstract class AbstractDataSourceAdapter extends AbstractUnsupportedOpera
         this.dataSourceMap = dataSourceMap;
         databaseType = createDatabaseType();
     }
+
+    public AbstractDataSourceAdapter(final String name, final DataSource dataSource) throws SQLException {
+        dataSourceMap = new HashMap<>(1, 1);
+        dataSourceMap.put(name, dataSource);
+        databaseType = createDatabaseType();
+    }
     
     public AbstractDataSourceAdapter(final DataSource dataSource) throws SQLException {
         dataSourceMap = new HashMap<>(1, 1);

@@ -7,7 +7,7 @@ import org.springframework.context.annotation.ConditionContext;
 import org.springframework.core.type.AnnotatedTypeMetadata;
 
 /**
-* encrypt jdbc 配置规则条件
+* encrypt jdbc 配置规则生效条件
 * @author binyu.wu
 * @date 2022/11/1 14:14
 */

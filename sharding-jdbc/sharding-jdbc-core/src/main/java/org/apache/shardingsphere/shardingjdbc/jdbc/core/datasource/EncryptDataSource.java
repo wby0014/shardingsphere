@@ -36,16 +36,21 @@ import java.util.Properties;
  */
 @Getter
 public class EncryptDataSource extends AbstractDataSourceAdapter {
-    
+
     private final EncryptRuntimeContext runtimeContext;
     
     static {
         NewInstanceServiceLoader.register(SQLRewriteContextDecorator.class);
         NewInstanceServiceLoader.register(ResultProcessEngine.class);
     }
-    
+
     public EncryptDataSource(final DataSource dataSource, final EncryptRule encryptRule, final Properties props) throws SQLException {
         super(dataSource);
+        runtimeContext = new EncryptRuntimeContext(dataSource, encryptRule, props, getDatabaseType());
+    }
+    
+    public EncryptDataSource(final DataSource dataSource, final String originDataSourceName, final EncryptRule encryptRule, final Properties props) throws SQLException {
+        super(originDataSourceName, dataSource);
         runtimeContext = new EncryptRuntimeContext(dataSource, encryptRule, props, getDatabaseType());
     }
 

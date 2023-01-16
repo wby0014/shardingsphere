@@ -11,12 +11,13 @@ import java.util.Map;
 
 /**
  * 上下文工具类
+ *
  * @author binyu.wu
  * @date 2022/11/1 11:00
  */
 public class EncryptApplicationContext implements ApplicationContextAware {
 
-    private static ApplicationContext applicationContext;
+    public static ApplicationContext applicationContext;
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
@@ -39,10 +40,10 @@ public class EncryptApplicationContext implements ApplicationContextAware {
     /**
      * 根据名称获取bean
      */
-    public static <T> T getBean(String beanName,Class<T> clazz) {
+    public static <T> T getBean(String beanName, Class<T> clazz) {
         T obj;
         try {
-            obj = applicationContext.getBean(beanName,clazz);
+            obj = applicationContext.getBean(beanName, clazz);
         } catch (Exception e) {
             obj = null;
         }
@@ -76,4 +77,6 @@ public class EncryptApplicationContext implements ApplicationContextAware {
         }
         return map;
     }
+
+
 }
