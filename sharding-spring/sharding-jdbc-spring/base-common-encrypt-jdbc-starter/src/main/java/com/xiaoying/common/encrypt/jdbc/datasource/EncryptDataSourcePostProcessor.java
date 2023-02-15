@@ -14,6 +14,7 @@ import org.springframework.aop.framework.ProxyFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
+import org.springframework.core.Ordered;
 import org.springframework.util.StringUtils;
 
 import javax.sql.DataSource;
@@ -29,7 +30,7 @@ import java.util.Properties;
  * @date 2023/1/12 18:32
  */
 @Slf4j
-public class EncryptDataSourcePostProcessor implements BeanPostProcessor {
+public class EncryptDataSourcePostProcessor implements BeanPostProcessor, Ordered {
 
     private final EncryptRuleConfigurationProperties encryptRule;
     private final EncryptJdbcPropertiesConfigurationProperties props;
@@ -87,6 +88,11 @@ public class EncryptDataSourcePostProcessor implements BeanPostProcessor {
             log.error("create encrypt jdbc rule configuration error!", e);
             throw new ShardingSphereException("create encrypt jdbc rule configuration error!");
         }
+    }
+
+    @Override
+    public int getOrder() {
+        return 2147483646;
     }
 
 
